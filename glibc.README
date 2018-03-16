@@ -1,0 +1,47 @@
+# To notify change in particular property
+void g_object_notify (GObject *object,
+                 const gchar *property_name);
+Emits a "notify" signal for the property property_name on object .
+
+# Also can use g_variant_new() to create gvariant types
+gchar* string;
+ g_variant_new("s", string);
+
+
+# To deconstruct from gvariant
+Char *ipaddress, *mac, *hostname
+g_variant_get (value, "(sss)", &ipaddress, &mac, &hostname);
+
+# To create dictionary a{sv}
+
+GVariantBuilder *b;
+GVariant *dict;
+
+b = g_variant_builder_new (G_VARIANT_TYPE ("a{sv}"));
+g_variant_builder_add (b, "{sv}", "name", g_variant_new_string ("foo"));
+g_variant_builder_add (b, "{sv}", "timeout", g_variant_new_int32 (10));
+dict = g_variant_builder_end (b);
+
+# To iterate dictionary params
+
+g_variant_iter_next 
+
+// Iterates a dictionary of type 'a{sv}'
+void
+iterate_dictionary (GVariant *dictionary)
+{
+  GVariantIter iter;
+  GVariant *value;
+  gchar *key;
+
+  g_variant_iter_init (&iter, dictionary);
+  while (g_variant_iter_next (&iter, "{sv}", &key, &value))
+    {
+      g_print ("Item '%s' has type '%s'\n", key,
+               g_variant_get_type_string (value));
+
+      // must free data for ourselves
+      g_variant_unref (value);
+      g_free (key);
+    }
+}
